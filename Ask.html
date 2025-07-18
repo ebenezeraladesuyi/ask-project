@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Girlfriend?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #ff6b6b;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        #maybeBtn {
+            background-color: #FFC107;
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 105, 105, 0.7);
+            animation: fall linear forwards;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .response-message {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        #successMessage {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #2E7D32;
+        }
+        
+        #sadMessage {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #C62828;
+        }
+        
+        #thinkingMessage {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #F57F17;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: confetti-fall 5s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <div class="container">
+        <h1>Will You Be My Girlfriend?</h1>
+        <p>I've been thinking about this for a while, and I can't imagine my life without you in it. You make every day brighter just by being you.</p>
+        
+        <div class="buttons">
+            <button id="yesBtn">Yes! ❤️</button>
+            <button id="maybeBtn">Maybe? 🤔</button>
+            <button id="noBtn">No 😢</button>
+        </div>
+        
+        <div id="successMessage" class="response-message hidden">
+            <p>You've made me the happiest person in the world! ❤️ I can't wait to start this beautiful journey with you.</p>
+        </div>
+        
+        <div id="sadMessage" class="response-message hidden">
+            <p>I understand and respect your decision. Thank you for being honest with me.</p>
+        </div>
+        
+        <div id="thinkingMessage" class="response-message hidden">
+            <p>I'm assuming this to be a "YES".. Call me, if you clicked this..</p>
+        </div>
+    </div>
+
+    <form id="responseForm" action="https://formsubmit.co/ebenezeraladesuyi@gmail.com" method="POST" class="hidden">
+        <input type="hidden" name="_subject" value="New Response to Girlfriend Proposal!">
+        <input type="hidden" name="_replyto" value="user@example.com">
+        <input type="hidden" name="response" id="formResponse">
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const maybeBtn = document.getElementById('maybeBtn');
+            const successMessage = document.getElementById('successMessage');
+            const sadMessage = document.getElementById('sadMessage');
+            const thinkingMessage = document.getElementById('thinkingMessage');
+            const form = document.getElementById('responseForm');
+            const formResponse = document.getElementById('formResponse');
+            const heartsContainer = document.getElementById('hearts');
+            
+            // Create floating hearts
+            function createHearts() {
+                setInterval(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    heartsContainer.appendChild(heart);
+                    
+                    // Remove heart after animation completes
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5000);
+                }, 300);
+            }
+            
+            createHearts();
+            
+            // Handle yes button click
+            yesBtn.addEventListener('click', () => {
+                // Show success message
+                successMessage.classList.remove('hidden');
+                sadMessage.classList.add('hidden');
+                thinkingMessage.classList.add('hidden');
+                
+                // Create confetti effect
+                createConfetti();
+                
+                // Set form response and submit
+                formResponse.value = 'Yes! ❤️';
+                form.submit();
+            });
+            
+            // Handle no button click
+            noBtn.addEventListener('click', () => {
+                // Show sad message
+                sadMessage.classList.remove('hidden');
+                successMessage.classList.add('hidden');
+                thinkingMessage.classList.add('hidden');
+                
+                // Set form response and submit
+                formResponse.value = 'No 😢';
+                form.submit();
+            });
+            
+            // Handle maybe button click
+            maybeBtn.addEventListener('click', () => {
+                // Show thinking message
+                thinkingMessage.classList.remove('hidden');
+                successMessage.classList.add('hidden');
+                sadMessage.classList.add('hidden');
+                
+                // Set form response and submit
+                formResponse.value = 'Maybe? 🤔';
+                form.submit();
+            });
+            
+            // Create confetti effect
+            function createConfetti() {
+                const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+                
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation completes
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
