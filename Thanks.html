@@ -34,8 +34,6 @@
             width: 90%;
             position: relative;
             z-index: 10;
-            transform-style: preserve-3d;
-            animation: float 6s ease-in-out infinite;
         }
         
         h1 {
@@ -53,6 +51,26 @@
             line-height: 1.6;
         }
         
+        .home-btn {
+            padding: 0.8rem 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
         .hearts {
             position: absolute;
             top: 0;
@@ -68,12 +86,6 @@
             font-size: 1.5rem;
             color: rgba(255, 105, 105, 0.7);
             animation: fall linear forwards;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
         }
         
         @keyframes fall {
@@ -101,37 +113,14 @@
                 opacity: 0;
             }
         }
-        
-        .home-btn {
-            padding: 0.8rem 1.5rem;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-        }
-        
-        .home-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
     </style>
 </head>
 <body>
     <div class="hearts" id="hearts"></div>
     <div class="container">
         <h1>Thank You!</h1>
-        <p>Your response means the world to me. I truly appreciate you taking the time to consider my feelings.</p>
-        <p>Whatever your answer may be, I'm grateful to have you in my life.</p>
-        
-        <!-- <a href="index.html" class="home-btn">Back to Proposal</a> -->
+        <p>Your response has been received and means the world to me.</p>
+        <a href="index.html" class="home-btn">Back to Proposal</a>
     </div>
 
     <script>
@@ -156,6 +145,15 @@
             
             createHearts();
             
+            // Check URL parameters for response type
+            const urlParams = new URLSearchParams(window.location.search);
+            const response = urlParams.get('response');
+            
+            // If response was "Yes", show celebration
+            if(response && response.includes('Yes')) {
+                createConfetti();
+            }
+            
             // Create confetti effect
             function createConfetti() {
                 const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
@@ -174,17 +172,6 @@
                         confetti.remove();
                     }, 5000);
                 }
-            }
-            
-            // Check URL for response parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const response = urlParams.get('response');
-            
-            // If response was "Yes", show celebration
-            if(response && response.includes('Yes')) {
-                createConfetti();
-                document.querySelector('h1').textContent = "I'm So Happy!";
-                document.querySelector('p').innerHTML = "You've made me the happiest person in the world! ❤️<br>I can't wait to start this beautiful journey with you.";
             }
         });
     </script>
