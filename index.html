@@ -210,6 +210,46 @@
                 opacity: 0;
             }
         }
+
+        #emailModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+
+        #emailModalContent {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        #emailModalContent input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #emailModalContent button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -233,14 +273,25 @@
         </div>
         
         <div id="thinkingMessage" class="response-message hidden">
-            <p>I'm assuming this to be a "YES".. Call me, if you clicked this..</p>
+            <p>I appreciate you taking the time to think about it. Take all the time you need, and know that my feelings are genuine.</p>
+        </div>
+    </div>
+
+    <div id="emailModal">
+        <div id="emailModalContent">
+            <h2>Almost there!</h2>
+            <p>To send me your response, please enter your email address:</p>
+            <input type="email" id="userEmail" placeholder="Your email address" required>
+            <p id="responseType" style="display:none;"></p>
+            <button id="submitResponse">Send Response</button>
         </div>
     </div>
 
     <form id="responseForm" action="https://formsubmit.co/ebenezeraladesuyi@gmail.com" method="POST" class="hidden">
         <input type="hidden" name="_subject" value="New Response to Girlfriend Proposal!">
-        <input type="hidden" name="_replyto" value="user@example.com">
+        <input type="hidden" name="_replyto" id="replyToEmail">
         <input type="hidden" name="response" id="formResponse">
+        <input type="hidden" name="_next" value="thanks.html">
     </form>
 
     <script>
@@ -253,7 +304,14 @@
             const thinkingMessage = document.getElementById('thinkingMessage');
             const form = document.getElementById('responseForm');
             const formResponse = document.getElementById('formResponse');
+            const replyToEmail = document.getElementById('replyToEmail');
             const heartsContainer = document.getElementById('hearts');
+            const emailModal = document.getElementById('emailModal');
+            const userEmailInput = document.getElementById('userEmail');
+            const submitResponseBtn = document.getElementById('submitResponse');
+            const responseType = document.getElementById('responseType');
+            
+            let currentResponse = '';
             
             // Create floating hearts
             function createHearts() {
@@ -265,7 +323,6 @@
                     heart.style.animationDuration = Math.random() * 3 + 2 + 's';
                     heartsContainer.appendChild(heart);
                     
-                    // Remove heart after animation completes
                     setTimeout(() => {
                         heart.remove();
                     }, 5000);
@@ -276,41 +333,58 @@
             
             // Handle yes button click
             yesBtn.addEventListener('click', () => {
-                // Show success message
-                successMessage.classList.remove('hidden');
-                sadMessage.classList.add('hidden');
-                thinkingMessage.classList.add('hidden');
-                
-                // Create confetti effect
-                createConfetti();
-                
-                // Set form response and submit
-                formResponse.value = 'Yes! ❤️';
-                form.submit();
+                currentResponse = 'Yes! ❤️';
+                showEmailModal();
             });
             
             // Handle no button click
             noBtn.addEventListener('click', () => {
-                // Show sad message
-                sadMessage.classList.remove('hidden');
-                successMessage.classList.add('hidden');
-                thinkingMessage.classList.add('hidden');
-                
-                // Set form response and submit
-                formResponse.value = 'No 😢';
-                form.submit();
+                currentResponse = 'No 😢';
+                showEmailModal();
             });
             
             // Handle maybe button click
             maybeBtn.addEventListener('click', () => {
-                // Show thinking message
-                thinkingMessage.classList.remove('hidden');
-                successMessage.classList.add('hidden');
-                sadMessage.classList.add('hidden');
-                
-                // Set form response and submit
-                formResponse.value = 'Maybe? 🤔';
-                form.submit();
+                currentResponse = 'Maybe? 🤔';
+                showEmailModal();
+            });
+            
+            // Show email modal
+            function showEmailModal() {
+                responseType.textContent = `Response: ${currentResponse}`;
+                emailModal.style.display = 'flex';
+            }
+            
+            // Submit response
+            submitResponseBtn.addEventListener('click', () => {
+                if (userEmailInput.value && userEmailInput.value.includes('@')) {
+                    // Set form values
+                    formResponse.value = currentResponse;
+                    replyToEmail.value = userEmailInput.value;
+                    
+                    // Submit form
+                    form.submit();
+                    
+                    // Show appropriate message
+                    emailModal.style.display = 'none';
+                    
+                    if (currentResponse === 'Yes! ❤️') {
+                        successMessage.classList.remove('hidden');
+                        sadMessage.classList.add('hidden');
+                        thinkingMessage.classList.add('hidden');
+                        createConfetti();
+                    } else if (currentResponse === 'No 😢') {
+                        sadMessage.classList.remove('hidden');
+                        successMessage.classList.add('hidden');
+                        thinkingMessage.classList.add('hidden');
+                    } else {
+                        thinkingMessage.classList.remove('hidden');
+                        successMessage.classList.add('hidden');
+                        sadMessage.classList.add('hidden');
+                    }
+                } else {
+                    alert('Please enter a valid email address');
+                }
             });
             
             // Create confetti effect
@@ -327,10 +401,31 @@
                     confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
                     document.body.appendChild(confetti);
                     
-                    // Remove confetti after animation completes
                     setTimeout(() => {
                         confetti.remove();
                     }, 5000);
+                }
+            }
+
+            // Alternative email submission for local testing
+            function sendEmailAlternative(response, email) {
+                // This is a fallback that won't actually send emails but will show the response
+                console.log(`Would send email to you with response: ${response} from ${email}`);
+                
+                // Show appropriate message
+                if (response === 'Yes! ❤️') {
+                    successMessage.classList.remove('hidden');
+                    sadMessage.classList.add('hidden');
+                    thinkingMessage.classList.add('hidden');
+                    createConfetti();
+                } else if (response === 'No 😢') {
+                    sadMessage.classList.remove('hidden');
+                    successMessage.classList.add('hidden');
+                    thinkingMessage.classList.add('hidden');
+                } else {
+                    thinkingMessage.classList.remove('hidden');
+                    successMessage.classList.add('hidden');
+                    sadMessage.classList.add('hidden');
                 }
             }
         });
