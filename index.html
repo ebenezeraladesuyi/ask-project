@@ -280,6 +280,9 @@
                 e.preventDefault();
                 formResponse.value = 'Yes! ❤️';
                 form.submit();
+                successMessage.classList.remove('hidden');
+                sadMessage.classList.add('hidden');
+                thinkingMessage.classList.add('hidden');
                 createConfetti();
             });
             
